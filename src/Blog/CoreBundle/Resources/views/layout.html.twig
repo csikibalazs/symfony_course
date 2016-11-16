@@ -1,0 +1,31 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}CoreBundle:Post:index{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/core/css/main.css') }}">
+{% endblock %}
+{% block body %}
+    <header>
+        <p>Symfony2 blog</p>
+        <nav>
+            <ul>
+                <li><a href="{{ path('blog_core_post_index') }}">{{ 'home' | trans }}</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    {% block sidebar %}{% endblock %}
+
+    <section>
+        {% for type, messages in app.session.flashbag.all() %}
+            {% for message in messages %}
+                <p class="session-message">{{ message }}</p>
+            {% endfor %}
+        {% endfor %}
+        {% block section %}{% endblock %}
+    </section>
+
+    <footer>
+        <p>© {{ 'now' | date('Y') }} Symfony2 blog</p>
+    </footer>
+{% endblock %}

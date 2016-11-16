@@ -12,4 +12,28 @@ use Doctrine\ORM\EntityRepository;
  */
 class AuthorRepository extends EntityRepository
 {
+    /**
+     * Find first author
+     *
+     * @return Author
+     */
+    public function findFirst()
+    {
+        $qb = $this->getQueryBuilder()
+            ->orderBy('a.id', 'asc')
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getQueryBuilder() {
+        $em = $this->getEntityManager();
+        $qb = $em->getRepository('ModelBundle:Author')
+            ->createQueryBuilder('a');
+        
+        return $qb;
+    }
 }

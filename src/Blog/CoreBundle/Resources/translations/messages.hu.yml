@@ -1,0 +1,24 @@
+home: Főoldal
+
+on: kor
+by: by
+read.mode: Olvasd tovább
+name: Név
+send: Küld
+
+post:
+  pural: Posts
+  latest: Legutóbbi
+  on: Posted on
+  by: Posts by
+  by.author: Posts by %name%
+  comments: '{0} nincs comments | {1} %count% comment| ]1,Inf] %count% comments'
+
+comment:
+  singulat: komment
+  plural: kommentek
+  write: Írj kommentet
+
+author:
+  title: Szerző
+  empty.posts: Poster do not have any posts

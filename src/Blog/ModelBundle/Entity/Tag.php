@@ -5,12 +5,12 @@ namespace Blog\ModelBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Tags
+ * Tag
  *
- * @ORM\Table(name="tags")
- * @ORM\Entity(repositoryClass="Blog\ModelBundle\Repository\TagsRepository")
+ * @ORM\Table(name="tag")
+ * @ORM\Entity(repositoryClass="Blog\ModelBundle\Repository\TagRepository")
  */
-class Tags
+class Tag
 {
     /**
      * @var int
@@ -50,7 +50,7 @@ class Tags
      *
      * @param string $tag
      *
-     * @return Tags
+     * @return Tag
      */
     public function setTag($tag)
     {

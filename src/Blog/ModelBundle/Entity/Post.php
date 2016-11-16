@@ -2,8 +2,10 @@
 
 namespace Blog\ModelBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Post
@@ -33,6 +35,14 @@ class Post extends Timestampable
     /**
      * @var string
      *
+     * @Gedmo\Slug(fields={"title"}, unique=false)
+     * @ORM\Column(length=255)
+     */
+    private $slug;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="body", type="text")
      * @Assert\NotBlank
      */
@@ -48,11 +58,27 @@ class Post extends Timestampable
     private $author;
 
     /**
-     * @var Tags
+     * @var Author
      *
-     * @ORM\ManyToMany(targetEntity="Tags", mappedBy="tags")
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"remove"})
      */
-    private $tags;
+    private $comments;
+
+    /**
+     * @var Tag
+     *
+     * @ORM\ManyToMany(targetEntity="Tag", mappedBy="tag")
+     */
+    private $tag;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+        $this->tag = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -86,6 +112,31 @@ class Post extends Timestampable
     {
         return $this->title;
     }
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     *
+     * @return Post
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
 
     /**
      * Set body
@@ -134,18 +185,76 @@ class Post extends Timestampable
     }
 
     /**
-     * @return Tags
+     * @return Tag
      */
-    public function getTags()
+    public function getTag()
     {
-        return $this->tags;
+        return $this->tag;
     }
 
     /**
-     * @param Tags $tags
+     * @param Tag $tag
      */
-    public function setTags($tags)
+    public function setTag($tag)
     {
-        $this->tags = $tags;
+        $this->tag = $tag;
+    }
+
+    /**
+     * Add tag
+     *
+     * @param \Blog\ModelBundle\Entity\Tag $tag
+     *
+     * @return Post
+     */
+    public function addTag(\Blog\ModelBundle\Entity\Tag $tag)
+    {
+        $this->tag[] = $tag;
+
+        return $this;
+    }
+
+    /**
+     * Remove tag
+     *
+     * @param \Blog\ModelBundle\Entity\Tag $tag
+     */
+    public function removeTag(\Blog\ModelBundle\Entity\Tag $tag)
+    {
+        $this->tag->removeElement($tag);
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \Blog\ModelBundle\Entity\Comment $comment
+     *
+     * @return Post
+     */
+    public function addComment(Comment $comment)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \Blog\ModelBundle\Entity\Comment $comment
+     */
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }
