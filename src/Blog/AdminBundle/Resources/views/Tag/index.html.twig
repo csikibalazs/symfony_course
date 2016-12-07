@@ -1,0 +1,40 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Tags list{% endblock %}
+
+{% block section %}
+    <h1>Tags list</h1>
+
+    <table class="record_list">
+        <thead>
+        <tr>
+            <th>Created at</th>
+            <th>Updated at</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for tag in tags %}
+            <tr>
+                <td>{{ tag.createdAt | date('Y-m-d H:i:s') }}</td>
+                <td>{% if tag.updatedAt %}{{ tag.updatedAt | date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td><a href="{{ path('blog_admin_tag_edit', { 'id': tag.id }) }}">{{ tag.name }}</a></td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('blog_admin_tag_edit', { 'id': tag.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('blog_admin_tag_new') }}">Create a new tag</a>
+        </li>
+    </ul>
+{% endblock %}

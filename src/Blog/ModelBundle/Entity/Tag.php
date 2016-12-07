@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="tag")
  * @ORM\Entity(repositoryClass="Blog\ModelBundle\Repository\TagRepository")
  */
-class Tag
+class Tag extends Timestampable
 {
     /**
      * @var int
@@ -24,9 +24,9 @@ class Tag
     /**
      * @var string
      *
-     * @ORM\Column(name="tag", type="string", length=150)
+     * @ORM\Column(name="name", type="string", length=150)
      */
-    private $tag;
+    private $name;
 
     /**
      * @var Post
@@ -46,27 +46,27 @@ class Tag
     }
 
     /**
-     * Set tag
+     * Set name
      *
-     * @param string $tag
+     * @param string $name
      *
      * @return Tag
      */
-    public function setTag($tag)
+    public function setName($name)
     {
-        $this->tag = $tag;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get tag
+     * Get name
      *
      * @return string
      */
-    public function getTag()
+    public function getName()
     {
-        return $this->tag;
+        return $this->name;
     }
 
     /**
@@ -84,5 +84,35 @@ class Tag
     {
         $this->post = $post;
     }
-}
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->post = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
+    /**
+     * Add post
+     *
+     * @param \Blog\ModelBundle\Entity\Post $post
+     *
+     * @return Tag
+     */
+    public function addPost(Post $post)
+    {
+        $this->post[] = $post;
+
+        return $this;
+    }
+
+    /**
+     * Remove post
+     *
+     * @param \Blog\ModelBundle\Entity\Post $post
+     */
+    public function removePost(Post $post)
+    {
+        $this->post->removeElement($post);
+    }
+}

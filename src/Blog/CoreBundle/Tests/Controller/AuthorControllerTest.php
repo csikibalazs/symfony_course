@@ -23,7 +23,7 @@ class AuthorControllerTest extends WebTestCase
         $authpr = $client->getContainer()->get('doctrine')->getManager()->getRepository('ModelBundle:Author')->findFirst();
         $authorPostsCount = $author->getPosts()->count();
 
-        $crawler = $client->request('GET', '/author/'.$author->getSlug());
+        $crawler = $client->request('GET', '/en/author/'.$author->getSlug());
         $this->assetTrue($client->getResponse()->isSuccessful(), 'The response was not successful');
 
         $this->assertCount($authorPostsCount, $crawler->filter('h2'), 'there should be' . $authorPostsCount . ' posts');

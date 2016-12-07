@@ -2,6 +2,7 @@
 
 namespace Blog\CoreBundle\Controller;
 
+use Blog\CoreBundle\Services\PostManager;
 use Blog\ModelBundle\Entity\Comment;
 use Blog\ModelBundle\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -11,6 +12,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class PostController
+ *
+ * @Route("/{_locale}", requirements = {"_locale"="en|hu"}, defaults={"_locale"="en"}))
+ */
 class PostController extends Controller
 {
     /**
@@ -18,8 +24,8 @@ class PostController extends Controller
      */
     public function indexAction()
     {
-        $posts = $this->getDoctrine()->getRepository('ModelBundle:Post')->findAll();
-        $latestPosts = $this->getDoctrine()->getRepository('ModelBundle:Post')->findLatest(5);
+        $posts = $this->getPostManager()->findAll();
+        $latestPosts = $this->getPostManager()->findLatest(5);
 
         return $this->render('CoreBundle:Post:index.html.twig', array(
             'posts' => $posts,
@@ -40,15 +46,7 @@ class PostController extends Controller
      */
     public function showAction($slug)
     {
-        $post = $this->getDoctrine()->getRepository('ModelBundle:Post')->findOneBy(
-            array(
-                'slug' => $slug
-            )
-        );
-
-        if (null === $post) {
-            throw $this->createNotFoundException('Post not found');
-        }
+        $post = $this->getPostManager()->findBySlug($slug);
 
         $form = $this->createForm(new CommentType());
 
@@ -62,7 +60,6 @@ class PostController extends Controller
      * @param Request $request
      * @param string $slug
      *
-     * @throws NotFoundHttpException
      * @Route("/{slug}/create-comment")
      * @Method("POST")
      * @Template("CoreBundle:Post:show.html.twig")
@@ -71,25 +68,10 @@ class PostController extends Controller
      */
     public function createCommentAction(Request $request, $slug)
     {
-        $post = $this->getDoctrine()->getRepository('ModelBundle:Post')->findOneBy(
-            array(
-                'slug' => $slug
-            )
-        );
+        $post = $this->getPostManager()->findBySlug($slug);
+        $form = $this->getPostManager()->createComment($post, $request);
 
-        if (null === $post) {
-            throw $this->createNotFoundException('Post not found');
-        }
-
-        $comment = new Comment();
-        $comment->setPost($post);
-
-        $form = $this->createForm(new CommentType(), $comment);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->getDoctrine()->getManager()->persist($comment);
-            $this->getDoctrine()->getManager()->flush();
+        if (true === $form) {
 
             $this->get('session')->getFlashBag()->add('success', 'Your comment was submitted successfully');
 
@@ -101,6 +83,16 @@ class PostController extends Controller
             'post' => $post,
             'form' => $form->createView()
         );
+    }
+
+    /**
+     * Get post manager
+     *
+     * @return PostManager
+     */
+    private function getPostManager()
+    {
+        return $this->get('postManager');
     }
 
 }

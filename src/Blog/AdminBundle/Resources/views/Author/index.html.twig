@@ -1,0 +1,43 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block title %}Authors list{% endblock %}
+
+{% block section %}
+    <h1>Authors list</h1>
+
+    <table class="record_list">
+        <thead>
+        <tr>
+            <th>Created at</th>
+            <th>Updated at</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for author in authors %}
+            <tr>
+                <td>{{ author.createdAt | date('Y-m-d H:i:s') }}</td>
+                <td>{% if author.updatedAt %}{{ author.updatedAt | date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ author.name }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('blog_admin_author_show', { 'id': author.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('blog_admin_author_edit', { 'id': author.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('blog_admin_author_new') }}">Create a new author</a>
+        </li>
+    </ul>
+{% endblock %}

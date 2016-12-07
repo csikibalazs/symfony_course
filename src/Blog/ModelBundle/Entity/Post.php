@@ -67,7 +67,7 @@ class Post extends Timestampable
     /**
      * @var Tag
      *
-     * @ORM\ManyToMany(targetEntity="Tag", mappedBy="tag")
+     * @ORM\ManyToMany(targetEntity="Tag", mappedBy="name")
      */
     private $tag;
 
